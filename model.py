@@ -12,7 +12,8 @@ class Net(nn.Module):
         self.relu3 = nn.ReLU()
         self.linear4 = nn.Linear(50,1)
 
-        self.relu4 = nn.ReLU()
+        #self.relu4 = nn.ReLU()
+        self.sigmoid4 = nn.Sigmoid()
 
     def forward(self,x):
         x = self.linear1(x)
@@ -23,7 +24,8 @@ class Net(nn.Module):
         x = self.relu3(x)
         x = self.linear4(x)
 
-        x = self.relu4(x)
+        #x = self.relu4(x)
+        x = self.sigmoid4(x)
 
         return x
     

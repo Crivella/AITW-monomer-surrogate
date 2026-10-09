@@ -4,7 +4,7 @@ import logging
 from rich.logging import RichHandler
 
 
-def get_logger(name: str, output_file: str) -> logging.Logger:
+def get_logger(name: str, output_file: str = None) -> logging.Logger:
     """Get a logger with the specified name.
 
     Args:
@@ -18,7 +18,7 @@ def get_logger(name: str, output_file: str) -> logging.Logger:
     logger.setLevel(logging.DEBUG)
 
     # Create a RichHandler for pretty logging output
-    rich_handler = RichHandler(rich_tracebacks=True)
+    rich_handler = RichHandler(rich_tracebacks=True, markup=True)
     rich_handler.setLevel(logging.DEBUG)
 
     # Create a formatter and set it for the handler
@@ -27,20 +27,23 @@ def get_logger(name: str, output_file: str) -> logging.Logger:
     )
     rich_handler.setFormatter(console_formatter)
 
-    # Create a file handler for logging to a file
-    file_handler = logging.FileHandler(output_file)
-    file_handler.setLevel(logging.DEBUG)
+    file_handler = None
+    if output_file:
+        # Create a file handler for logging to a file
+        file_handler = logging.FileHandler(output_file)
+        file_handler.setLevel(logging.DEBUG)
 
-    # Create a formatter and set it for the file handler
-    file_formatter = logging.Formatter(
-        "{asctime} - {levelname:>7s} - {message}", style="{"
-    )
-    file_handler.setFormatter(file_formatter)
+        # Create a formatter and set it for the file handler
+        file_formatter = logging.Formatter(
+            "{asctime} - {levelname:>7s} - {message}", style="{"
+        )
+        file_handler.setFormatter(file_formatter)
 
     # Add the handler to the logger
     if not logger.hasHandlers():
         logger.addHandler(rich_handler)
-        logger.addHandler(file_handler)
+        if file_handler:
+            logger.addHandler(file_handler)
 
     return logger
 

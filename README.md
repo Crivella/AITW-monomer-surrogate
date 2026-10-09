@@ -27,6 +27,15 @@ It consists of 3 hidden layers, each with 50 neurons. ReLU is used as the activa
 
 Before training both the input and output values are transformed using the logarithm function and scaled to the range (0,1).
 
+## Model weights
+
+The package also includes a set of model weights trained on the provided dataset. The weights are stored in the file [weights.pt](aitw_infiltration_surrogate/weights.pt) and have been trained with the same defaults as the CLI command `aitw-infiltration-surrogate train`:
+
+- Number of epochs: 10000
+- Patience: 500
+- train_test_split_ratio: 0.2
+- val_test_split_ratio: 0.5
+
 ## Installation
 
 ```bash
@@ -49,6 +58,16 @@ Example for training the surrogate model with the provided dataset:
 ```bash
 aitw-infiltration-surrogate train --data_file surrogate_data.csv --output_dir model_output
 ```
+
+Example for running inference with the surrogate model using the provided weights:
+
+```bash
+aitw-infiltration-surrogate inference --input_file input.csv
+```
+
+> [!NOTE]
+> The inference will use the weights provided in the package by default if none are specified. You can also specify your own weights using the `--weight_file` option.
+
 
 #### Tab autocompletion
 

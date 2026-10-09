@@ -1,0 +1,112 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "aitw_infiltration_surrogate/**"
+      - "pyproject.toml"
+      - ".github/workflows/ci.yml"
+      - "examples/**"
+  pull_request:
+
+concurrency:
+  group: ${{format('{0}:{1}:{2}', github.repository, github.ref, github.workflow)}}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.14"]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cache Python dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ matrix.python-version }}-tests-${{ hashFiles('**/pyproject.toml') }}
+          restore-keys: pip-${{ matrix.python-version }}-tests
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Python dependencies
+        run: pip install .
+
+      - name: Run aitw-infiltration-surrogate CLI tests
+        run: |
+          aitw-infiltration-surrogate --help
+
+          aitw-infiltration-surrogate train \
+            --data_file examples/dataset.csv \
+            --output_dir testout \
+            --n_epochs 5
+
+          [ ! -f testout/weight.pt ] && echo "Trained weights file not found!" && exit 1
+
+          # Test inference with shipped weights
+          aitw-infiltration-surrogate inference \
+            --input_file examples/dataset.csv
+            --output_file shipped_results.csv
+
+          # Test inference with the trained weights
+          aitw-infiltration-surrogate inference \
+            --weight_file testout/weight.pt \
+            --input_file examples/dataset.csv \
+            --output_file trained_results.csv
+
+          ERROR=0
+          [ ! -f shipped_results.csv ] && echo "Shipped results file not found!" && ERROR=1
+          [ ! -f trained_results.csv ] && echo "Trained results file not found!" && ERROR=1
+          [ $ERROR -eq 1 ] && exit 1 
+
+  test-eessi:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up EESSI environment
+        uses: eessi/setup-eessi@v1
+        with:
+          eessi_stack_version: '2023.06'
+
+
+      - name: Test building with EESSI
+        run: |
+          module load EESSI-extend
+          unset EASYBUILD_DEBUG
+          eb --logtostdout --software-commit=$GITHUB_SHA .github/ci.eb
+
+          module load ci-aitw-infiltration-surrogate
+
+          aitw-infiltration-surrogate train \
+            --data_file examples/dataset.csv \
+            --output_dir testout \
+            --n_epochs 5
+
+          [ ! -f testout/weight.pt ] && echo "Trained weights file not found!" && exit 1
+
+          # Test inference with shipped weights
+          aitw-infiltration-surrogate inference \
+            --input_file examples/dataset.csv
+            --output_file shipped_results.csv
+
+          # Test inference with the trained weights
+          aitw-infiltration-surrogate inference \
+            --weight_file testout/weight.pt \
+            --input_file examples/dataset.csv \
+            --output_file trained_results.csv
+
+          ERROR=0
+          [ ! -f shipped_results.csv ] && echo "Shipped results file not found!" && ERROR=1
+          [ ! -f trained_results.csv ] && echo "Trained results file not found!" && ERROR=1
+          [ $ERROR -eq 1 ] && exit 1 

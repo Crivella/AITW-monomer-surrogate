@@ -81,15 +81,15 @@ def inference(
     
     result: torch.Tensor = model(input_data)
 
-    result_df = pd.DataFrame(result.detach().numpy(), columns=['Saturation Time'])
+    result_df = pd.DataFrame(result.detach().numpy(), columns=['sat_time'])
 
-    result_df['Saturation Time'] = np.exp(result_df['Saturation Time'])
+    result_df['sat_time'] = np.exp(result_df['sat_time'])
     result_df.to_csv(output_file, index=False)
 
     if validation_data is not None:
-        dev_sq = np.sqrt(np.mean((result_df['Saturation Time'] - validation_data['sat_time'])**2))
+        dev_sq = np.sqrt(np.mean((result_df['sat_time'] - validation_data['sat_time'])**2))
         click.echo(f"  RMSE against `sat_time` column: {dev_sq:.4f}")
-        r2 = r2_score(validation_data['sat_time'], result_df['Saturation Time'])
+        r2 = r2_score(validation_data['sat_time'], result_df['sat_time'])
         click.echo(f"  R^2 score against `sat_time` column: {r2:.4f}")
 
     click.secho(f"Results saved to {output_file}", fg='green')

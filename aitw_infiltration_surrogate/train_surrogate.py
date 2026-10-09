@@ -167,13 +167,13 @@ def train_surrogate(
 
     scaler.fit(train)
 
-    train_dataset = MonomerDataset(train.to_numpy())
+    train_dataset = MonomerDataset(train)
     train_dataloader = DataLoader(dataset=train_dataset, batch_size=train_batch_size)
 
-    val_dataset = MonomerDataset(val.to_numpy())
+    val_dataset = MonomerDataset(val)
     val_dataloader = DataLoader(dataset=val_dataset, batch_size=val_batch_size)
 
-    test_dataset = MonomerDataset(test.to_numpy())
+    test_dataset = MonomerDataset(test)
     test_dataloader = DataLoader(dataset=test_dataset, batch_size=test_batch_size)
 
     model = Net(scaler)

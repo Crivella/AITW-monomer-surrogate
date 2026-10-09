@@ -1,4 +1,4 @@
-"""AITW Monomer Surrogate CLI commands"""
+"""AITW Monomer Infiltration Surrogate CLI commands"""
 import logging
 
 from .main import cli, click
@@ -70,7 +70,7 @@ def train(
         verbose: int = 0,
     ) -> None:
     """Train wood microstructure model"""
-    from aitw_monomer_surrogate.train_surrogate import train_surrogate
+    from aitw_infiltration_surrogate.train_surrogate import train_surrogate
 
     train_surrogate(
         n_epochs=n_epochs,

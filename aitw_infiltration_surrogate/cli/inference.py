@@ -1,4 +1,4 @@
-"""AITW Monomer Surrogate CLI commands"""
+"""AITW Monomer Infiltration Surrogate CLI commands"""
 import os
 import sys
 from importlib import resources
@@ -32,7 +32,7 @@ def inference(
     import torch
     from sklearn.metrics import r2_score
 
-    from aitw_monomer_surrogate.model import Net
+    from aitw_infiltration_surrogate.model import Net
 
     if not os.path.exists(input_file):
         click.echo(f"Input file '{input_file}' does not exist.", err=True)
@@ -40,7 +40,7 @@ def inference(
 
     if weight_file is None:
         # Use default weight file from package resources
-        with resources.path('aitw_monomer_surrogate', 'weights.pt') as default_weight_path:
+        with resources.path('aitw_infiltration_surrogate', 'weights.pt') as default_weight_path:
             weight_file = str(default_weight_path)
     elif not os.path.exists(weight_file):
         click.echo(f"Weight file '{weight_file}' does not exist.", err=True)

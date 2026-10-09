@@ -1,4 +1,4 @@
-"""AITW Monomer Surrogate training script"""
+"""AITW Monomer Infiltration Surrogate training script"""
 import copy
 import logging
 import math
@@ -203,16 +203,16 @@ def train_surrogate(
                 best_val_loss = val_loss
                 best_model_weights = copy.deepcopy(model.state_dict())
                 patience_curr = patience
+                if loss_threshold is not None and val_loss < loss_threshold:
+                    logger.info(f"Early stopping triggered by loss threshold after {n+1} epochs.")
+                    break
             else:
                 patience_curr -= 1
                 if patience_curr == 0:
                     logger.info(f"Early stopping triggered by patience after {n+1} epochs.")
                     break
-                if loss_threshold is not None and val_loss < loss_threshold:
-                    logger.info(f"Early stopping triggered by loss threshold after {n+1} epochs.")
-                    break
 
-            if save_interval > 0 and n % save_interval == 0:
+            if save_interval > 0 and (n+1) % save_interval == 0:
                 file_path = os.path.join(output_dir, f"model_epoch_{n+1}.pt")
                 logger.debug(f"Saving model weights to {file_path}")
                 torch.save(model.state_dict(), file_path)

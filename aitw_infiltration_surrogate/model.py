@@ -1,4 +1,4 @@
-"""AITW Monomer Surrogate Model definition"""
+"""AITW Monomer Infiltration Surrogate Model definition"""
 import torch
 from sklearn.preprocessing import MinMaxScaler
 from torch import nn

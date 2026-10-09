@@ -1,4 +1,4 @@
-"""AITW Monomer Surrogate Dataset handler"""
+"""AITW Monomer InfiltrationSurrogate Dataset handler"""
 import torch
 from torch.utils.data import Dataset
 

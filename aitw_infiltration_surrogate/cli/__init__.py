@@ -1,4 +1,4 @@
-"""AITW Monomer Surrogate CLI commands"""
+"""AITW Monomer Infiltration Surrogate CLI commands"""
 
 from .inference import *
 from .main import *

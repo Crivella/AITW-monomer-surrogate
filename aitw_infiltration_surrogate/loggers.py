@@ -1,4 +1,4 @@
-"""Logging utilities for the AITW monomer surrogate project."""
+"""Logging utilities for the AITW monomer infiltration surrogate project."""
 import logging
 
 from rich.logging import RichHandler

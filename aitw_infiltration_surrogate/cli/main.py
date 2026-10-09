@@ -1,4 +1,4 @@
-"""AITW Monomer Surrogate CLI commands"""
+"""AITW Monomer Infiltration Surrogate CLI commands"""
 import os
 
 import click as original_click

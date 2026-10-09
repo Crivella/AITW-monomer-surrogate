@@ -23,7 +23,7 @@ def get_logger(name: str, output_file: str = None) -> logging.Logger:
 
     # Create a formatter and set it for the handler
     console_formatter = logging.Formatter(
-        "{asctime} - {name} - {levelname:>7s} - {message}", style="{",
+        "{asctime} - {name} - {message}", style="{",
     )
     rich_handler.setFormatter(console_formatter)
 

@@ -157,7 +157,8 @@ def train_surrogate(
         logger.error("Data contains non-positive values. Log transformation cannot be applied.")
         sys.exit(1)
 
-    data = data.map(math.log)
+    data = data.to_numpy()
+    data = np.log(data)
 
     train, test = train_test_split(data, test_size=train_test_split_ratio)
     val, test = train_test_split(test, test_size=val_test_split_ratio)

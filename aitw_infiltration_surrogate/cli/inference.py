@@ -1,4 +1,5 @@
 """AITW Monomer Infiltration Surrogate CLI commands"""
+import math
 import os
 import sys
 from importlib import resources
@@ -80,8 +81,9 @@ def inference(
 
     logger.info(f"Running inference on {input_data.shape[0]} samples...")
     # Use the same log transformation as during training
-    input_data = input_data.map(np.log)
-    input_data = torch.tensor(input_data.values, dtype=torch.float32)
+    input_data = input_data.to_numpy()
+    input_data = np.log(input_data)
+    input_data = torch.tensor(input_data, dtype=torch.float32)
     
     result: torch.Tensor = model(input_data)
 

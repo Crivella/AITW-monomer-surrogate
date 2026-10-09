@@ -5,6 +5,7 @@ import math
 import os
 import sys
 
+import numpy as np
 import pandas as pd
 import torch
 from sklearn.metrics import r2_score
@@ -152,6 +153,9 @@ def train_surrogate(
     logger.info(f"Save interval: {save_interval}")
 
     data = pd.read_csv(data_file)
+    if np.any(data <= 0):
+        logger.error("Data contains non-positive values. Log transformation cannot be applied.")
+        sys.exit(1)
 
     data = data.map(math.log)
 

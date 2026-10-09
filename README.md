@@ -5,8 +5,8 @@ The code trains a multilayer perceptron to infer a mapping between the physical 
 ## Input and output
 The input of the model consists of six parameters characterizing the transparent wood sample:
 - Sample length [m] - L
-- Fluid dynamic viscosity [Pa$\cdot$s] - $\mu$
-- Longitudinal permeability [$m^2$] - $k_{long}$
+- Fluid dynamic viscosity [Pa $\cdot$ s] - $\mu$
+- Longitudinal permeability [ $m^2$ ] - $k_{long}$
 - Mean pore radius [m] - $r_{\mu}$
 - Surface tension [N/m] - $\gamma$
 - Porosity - $\phi$

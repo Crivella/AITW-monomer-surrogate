@@ -1,5 +1,5 @@
 """AITW Monomer Surrogate CLI commands"""
 
+from .inference import *
 from .main import *
-from .run import *
 from .train import *

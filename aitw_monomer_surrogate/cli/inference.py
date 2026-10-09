@@ -10,7 +10,7 @@ from .main import cli, click
     '--weight_file', type=click.Path(exists=True, dir_okay=False), required=True,
     help='Path to model weight file'
 )
-def run(
+def inference(
         weight_file: str, 
     ) -> None:
     """Run an inference using the trained surrogate model."""
@@ -32,5 +32,5 @@ def run(
 
 
 __all__ = [
-    'run'
+    'inference'
 ]

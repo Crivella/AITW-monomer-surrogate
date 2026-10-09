@@ -1,5 +1,6 @@
-import torch
+"""AITW Monomer Surrogate Model definition"""
 from torch import nn
+
 
 class Net(nn.Module):
     def __init__(self):

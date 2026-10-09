@@ -9,6 +9,7 @@ on:
       - "pyproject.toml"
       - ".github/workflows/ci.yml"
       - "examples/**"
+      - "tests/**"
   pull_request:
 
 concurrency:
@@ -39,42 +40,11 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install Python dependencies
-        run: pip install .
+        run: pip install .[tests]
 
-      - name: Run aitw-infiltration-surrogate CLI tests
+      - name: Run tests
         run: |
-          aitw-infiltration-surrogate --help
-
-          aitw-infiltration-surrogate train \
-            --data_file examples/dataset.csv \
-            --output_dir testout \
-            --n_epochs 5
-
-          [ ! -f testout/weights.pt ] && echo "Trained weights file not found!" && exit 1
-
-          # Test inference with shipped weights
-          aitw-infiltration-surrogate inference \
-            --input_file examples/dataset.csv \
-            --output_file shipped_results.csv
-
-          # Test inference with the trained weights
-          aitw-infiltration-surrogate inference \
-            --weight_file testout/weights.pt \
-            --input_file examples/dataset.csv \
-            --output_file trained_results.csv
-
-          ERROR=0
-          if [ ! -f shipped_results.csv ]; then
-            echo "Shipped results file not found!"
-            ERROR=1
-          fi
-          if [ ! -f trained_results.csv ]; then
-            echo "Trained results file not found!"
-            ERROR=1
-          fi
-          if [ $ERROR -eq 1 ]; then
-            exit 1
-          fi
+          pytest -sv --disable-warnings
 
   test-eessi:
     runs-on: ubuntu-latest
@@ -87,42 +57,8 @@ jobs:
         with:
           eessi_stack_version: '2023.06'
 
-
       - name: Test building with EESSI
         run: |
           module load EESSI-extend
           unset EASYBUILD_DEBUG
           eb --logtostdout --software-commit=$GITHUB_SHA .github/ci.eb
-
-          module load ci-aitw-infiltration-surrogate
-
-          aitw-infiltration-surrogate train \
-            --data_file examples/dataset.csv \
-            --output_dir testout \
-            --n_epochs 5
-
-          [ ! -f testout/weights.pt ] && echo "Trained weights file not found!" && exit 1
-
-          # Test inference with shipped weights
-          aitw-infiltration-surrogate inference \
-            --input_file examples/dataset.csv \
-            --output_file shipped_results.csv
-
-          # Test inference with the trained weights
-          aitw-infiltration-surrogate inference \
-            --weight_file testout/weights.pt \
-            --input_file examples/dataset.csv \
-            --output_file trained_results.csv
-
-          ERROR=0
-          if [ ! -f shipped_results.csv ]; then
-            echo "Shipped results file not found!"
-            ERROR=1
-          fi
-          if [ ! -f trained_results.csv ]; then
-            echo "Trained results file not found!"
-            ERROR=1
-          fi
-          if [ $ERROR -eq 1 ]; then
-            exit 1
-          fi

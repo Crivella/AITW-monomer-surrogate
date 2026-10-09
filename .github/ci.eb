@@ -36,6 +36,8 @@ exts_list = [
             'download_filename': '%(software_commit)s.tar.gz',
             'filename': '%(software_commit)s.tar.gz',
         }],
+        'testinstall': True,
+        'runtest': 'pytest -sv --disable-warnings',
         'click_autocomplete_bins': ['aitw-infiltration-surrogate'],
     }),
 ]

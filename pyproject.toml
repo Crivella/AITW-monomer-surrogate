@@ -34,6 +34,9 @@ dependencies = [
 Source = "https://github.com/AI-TranspWood/AITW-infiltration-surrogate"
 
 [project.optional-dependencies]
+tests = [
+    "pytest",
+]
 release = [
     "flit"
 ]

@@ -50,23 +50,31 @@ jobs:
             --output_dir testout \
             --n_epochs 5
 
-          [ ! -f testout/weight.pt ] && echo "Trained weights file not found!" && exit 1
+          [ ! -f testout/weights.pt ] && echo "Trained weights file not found!" && exit 1
 
           # Test inference with shipped weights
           aitw-infiltration-surrogate inference \
-            --input_file examples/dataset.csv
+            --input_file examples/dataset.csv \
             --output_file shipped_results.csv
 
           # Test inference with the trained weights
           aitw-infiltration-surrogate inference \
-            --weight_file testout/weight.pt \
+            --weight_file testout/weights.pt \
             --input_file examples/dataset.csv \
             --output_file trained_results.csv
 
           ERROR=0
-          [ ! -f shipped_results.csv ] && echo "Shipped results file not found!" && ERROR=1
-          [ ! -f trained_results.csv ] && echo "Trained results file not found!" && ERROR=1
-          [ $ERROR -eq 1 ] && exit 1 
+          if [ ! -f shipped_results.csv ]; then
+            echo "Shipped results file not found!"
+            ERROR=1
+          fi
+          if [ ! -f trained_results.csv ]; then
+            echo "Trained results file not found!"
+            ERROR=1
+          fi
+          if [ $ERROR -eq 1 ]; then
+            exit 1
+          fi
 
   test-eessi:
     runs-on: ubuntu-latest
@@ -93,20 +101,28 @@ jobs:
             --output_dir testout \
             --n_epochs 5
 
-          [ ! -f testout/weight.pt ] && echo "Trained weights file not found!" && exit 1
+          [ ! -f testout/weights.pt ] && echo "Trained weights file not found!" && exit 1
 
           # Test inference with shipped weights
           aitw-infiltration-surrogate inference \
-            --input_file examples/dataset.csv
+            --input_file examples/dataset.csv \
             --output_file shipped_results.csv
 
           # Test inference with the trained weights
           aitw-infiltration-surrogate inference \
-            --weight_file testout/weight.pt \
+            --weight_file testout/weights.pt \
             --input_file examples/dataset.csv \
             --output_file trained_results.csv
 
           ERROR=0
-          [ ! -f shipped_results.csv ] && echo "Shipped results file not found!" && ERROR=1
-          [ ! -f trained_results.csv ] && echo "Trained results file not found!" && ERROR=1
-          [ $ERROR -eq 1 ] && exit 1 
+          if [ ! -f shipped_results.csv ]; then
+            echo "Shipped results file not found!"
+            ERROR=1
+          fi
+          if [ ! -f trained_results.csv ]; then
+            echo "Trained results file not found!"
+            ERROR=1
+          fi
+          if [ $ERROR -eq 1 ]; then
+            exit 1
+          fi
